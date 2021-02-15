@@ -69,3 +69,12 @@ penguins %>%
 
 penguins %>%
   drop_na(sex) #simply removes rows with NA for sex
+  group_by(island, sex) %>%
+  summarise(mean_bill_length = mean(bill_length_mm, na.rm = TRUE)
+            )
+  
+penguins %>%
+  drop_na(sex) %>% 
+  ggplot(aes(x = sex, y = flipper_length_mm)
+         ) +
+  geom_boxplot() #piping into ggplot
