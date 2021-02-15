@@ -46,4 +46,3 @@ penguins %>%
                      values = c("red3","mediumblue","limegreen")
   )+
   theme_bw()
-
