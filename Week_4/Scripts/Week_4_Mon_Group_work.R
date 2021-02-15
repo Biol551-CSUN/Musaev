@@ -17,7 +17,7 @@ mean_and_var <- penguins %>%
   drop_na(sex, body_mass_g, island, species) %>%
   summarise (mean_mass = mean(body_mass_g, na.rm = TRUE),
              var_mass = var(body_mass_g, na.rm = TRUE)
-             )
+  )
 view(mean_and_var)
 
 ### Part 2 ###
