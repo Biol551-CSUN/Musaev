@@ -15,14 +15,14 @@ glimpse(ChemData) #verify data is loaded
 ChemData_clean<-ChemData %>% #create pipeline for cleaning and formatting
   filter(complete.cases(.)) %>% #remove rows with NAs to clean data
   separate(col = Tide_time, #select column to split
-         into = c("Tide","Time"), #split into new columns Tide and Time
-         sep = "_", #separate values by underscore
-         remove = FALSE #keep original column
-)
+           into = c("Tide","Time"), #split into new columns Tide and Time
+           sep = "_", #separate values by underscore
+           remove = FALSE #keep original column
+  )
 #view(ChemData_clean) #view full clean data in necessary
 
 ChemData_spring<-ChemData_clean %>% #filter out a subset
-filter(Season == "SPRING") #only use data for spring
+  filter(Season == "SPRING") #only use data for spring
 
 spring_long <-ChemData_spring %>% #pivot spring data
   pivot_longer(cols = Temp_in:percent_sgd, #pivot all...
@@ -37,7 +37,7 @@ spring_long %>% #create pipeline for stats
             Variance = var(Values, na.rm = TRUE), #...variances...
             StDev = sd (Values, na.rm = TRUE) #...and standard deviations
   ) %>%
-write_csv(here("Week_4","Output","Group_work.csv")) #write stats to file
+  write_csv(here("Week_4","Output","Group_work.csv")) #write stats to file
 #view(spring_long)
 
 ### Plot ###
@@ -49,7 +49,7 @@ spring_wide<-spring_long %>% #pivot data back to wide for plotting
 spring_wide %>%
   ggplot(aes(x = pH, y = TA))+ #generate axes
   geom_point(aes(color = Site), #create scatterplot
-                 )+
+  )+
   labs(title = "pH vs Total Alkalinity in Spring", #add title
        subtitle = "For sites W and BP", #add subtitle
        caption = "Maunalua, Hawaii", #add caption
