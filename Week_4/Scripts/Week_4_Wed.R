@@ -52,5 +52,35 @@ ChemData_long %>%
             Param_stdev = sd (Values, na.rm = TRUE) #...and standard deviations
             )
 
+### Generate Plot ###
+ChemData_long %>%
+  ggplot(aes(x = Site, y = Values))+ #generate axes
+  geom_boxplot()+ #generate boxplot with the values
+  facet_wrap(~Variables, scales = "free"  #facet plot for each value
+             )
 
+ChemData_wide<-ChemData_long %>% #pivot data back to wide
+  pivot_wider(names_from = Variables, #"widen" from rows
+              values_from = Values) #populate with
+#view(ChemData_wide)
+
+ChemData_clean<-ChemData %>%
+  filter(complete.cases(.)) %>% #remove rows with NAs
+  separate(col = Tide_time, #select column to separate
+           into = c("Tide","Time"), #separate it into
+           sep = "_", #separate by underscore
+           remove = FALSE) %>%
+  pivot_longer(cols = Temp_in:percent_sgd, #columns to pivot
+               names_to = "Variables", #generate new row for each of 
+               values_to = "Values") %>% #populate with values from column
+  group_by(Variables, Site, Time) %>%
+  summarise(mean_vals = mean(Values, na.rm = TRUE)) %>% #group outputs
+  pivot_wider(names_from = Variables,
+              values_from = mean_vals) %>% #pivot the outputs wide
+  write_csv(here("Week_4","Output","Summary.csv")) #save to file
+
+         
+
+
+#view(ChemData_clean)
 
