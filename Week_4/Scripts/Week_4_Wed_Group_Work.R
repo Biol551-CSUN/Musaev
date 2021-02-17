@@ -57,4 +57,4 @@ spring_wide %>%
        y = "Total Alkalinity, umol/Kg", #add Y axis label
        color = "Site" #add legend label
   )
-theme_bw()#change theme of the plot background 
+theme_bw()#change theme of the plot background
