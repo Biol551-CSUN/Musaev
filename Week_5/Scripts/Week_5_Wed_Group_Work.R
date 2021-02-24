@@ -29,11 +29,21 @@ mutate(time = paste(hour(date),
        )
 #view(FullData)
 
+##### Calculations #####
+
 FullData<-FullData %>%
   group_by(time) %>%
-  summarize(mean(TempInSitu),
-            mean(SalinityInSitu_1pCal),
-            mean(AbsPressure), 
-            mean(Depth))
+  summarize(Mean_temp = mean(TempInSitu),
+            Mean_salinity = mean(SalinityInSitu_1pCal),
+            Mean_pressure = mean(AbsPressure), 
+            Mean_depth = mean(Depth))
 
 view(FullData)
+
+##### Plot #####
+ggplot(data = FullData,
+       mapping = aes(x = Mean_depth,
+                     y = Mean_temp))+
+  geom_point()+
+  labs(x = "Depth, m",
+       y = "Temperature, C")
