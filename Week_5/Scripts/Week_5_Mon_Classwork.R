@@ -56,4 +56,9 @@ FullData_stats <- FullData_long %>% #create pipeline for stats calcs
   )
 #view(FullData_stats)
 
-### Tibble ###
+### Tibbles ###
+T1 <- tibble(Site.ID = c("A", "B", "C", "D"), #create tibble with temperatures
+             Temperature = c(14.1, 16.7, 15.3, 12.8))
+T2 <-tibble(Site.ID = c("A", "B", "D", "E"), #create tibble with pH values
+            pH = c(7.3, 7.8, 8.1, 7.9))
+
