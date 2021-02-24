@@ -50,7 +50,10 @@ FullData_stats <- FullData_long %>% #create pipeline for stats calcs
   group_by (Variables, site.letter) %>% #select parameters to group by
   summarize(site_mean = mean(Values, na.rm = TRUE), #calc means in new column site_mean
             site_var = var(Values, na.rm = TRUE) #calc variances in new column site_var
-            )
-view(FullData_stats)
-  
-  
+  #          ) %>%
+  #pivot_wider (names_from = "site.letter", "Variables",
+  #             values_from = "site_mean", "site_var"
+               )
+#view(FullData_stats)
+
+### Tibble ###
