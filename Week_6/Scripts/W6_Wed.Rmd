@@ -25,7 +25,7 @@ library(kableExtra)
 ```
 
 # Make a Plot
-```{r PengFig, fig.align="center", fig.cap="Flippers by species", echo = FALSE, fig.path = "../Output/"}
+```{r PengFig, fig.align="center", fig.cap="Flippers by species", fig.path = "../Output/"}
 PenguinFigure <- penguins %>%
   ggplot(aes(x = species, y = flipper_length_mm, color = island)) +
   geom_boxplot()

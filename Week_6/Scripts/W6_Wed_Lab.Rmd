@@ -2,29 +2,68 @@
 title: "W6_Wed_Lab"
 author: "Kirill Musaev"
 date: "3/3/2021"
-output: html_document
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Introduction
+This is a **table** and **graphic** representation of mass of penguins of different species, grouped by island and sex
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Load libraries
+We will need **libraries** for:
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+1. Dataset ( _penguins_ )
+2. Formatting ( _tidyverse_ , _kableExtra_ ) and 
+3. File management ( _here_ )
+```{r libs, message = FALSE, warning = FALSE}
+library(palmerpenguins)
+library(tidyverse)
+library(here)
+library(kableExtra)
 ```
 
-## Including Plots
+# Process data
+Arranging the necessary data and calculating mean and variance of mass for the assigned groups. Commentary for each line is included
+```{r data, echo = FALSE}
+glimpse(penguins) #look at data structure
 
-You can also embed plots, for example:
+mean_and_var <- penguins %>% #create pipeline for calculating mean and variance
+  group_by(species, island, sex) %>% #assign groups to work with
+  drop_na(sex, body_mass_g, island, species) %>% #exclude NA variables
+  summarise (mean_mass = mean(body_mass_g, na.rm = TRUE),
+             var_mass = var(body_mass_g, na.rm = TRUE)#create and populate columns for mean and variance
+  )
+#view(mean_and_var)#check mean and variance calculations
+```
+# Create a table
+Display calculated mean and variance values in a convenient way
+```{r table, fig.path = "../Output/"}
+knitr::kable(mean_and_var,
+             col.names = c('Species', 'Island', 'Sex', 'Mean Mass (g)', 'Variance of Mass (g)')
+) %>% #change column names to readable format
+   kable_styling(full_width = F) #style width to fit all values
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+# Build a graph
+Create a graph showing average mass difference between the 3 species. Adelie penguins are indicated separately for 3 islands.
+```{r graph, fig.path = "../Output/"}
+PenguinFigure <- penguins %>%
+  ggplot(aes(x = species, y = flipper_length_mm, color = island)) + #set axes for the plot
+  geom_boxplot()+
+  labs(title = "Body Mass of Three Species of Penguins", #main figure lable
+       subtitle = "With boxplots", #secondary lable
+       caption = "Source: Palmer Station LTER / palmerpenguins package", #bottom lable
+       x = "Species", 
+       y = "Body mass, g",#axes lables
+       color = "Island") #legend lable
+
+PenguinFigure
+```
+
