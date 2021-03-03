@@ -3,7 +3,7 @@ title: "Markdown Lab"
 author: "Kirill Musaev"
 date: "3/1/2021"
 output:
-  html_document:
+  html_document: 
     toc: TRUE #add table of contents
     toc_float: TRUE #floating TOC on the left
     
@@ -17,8 +17,7 @@ knitr::opts_chunk$set(echo = TRUE#,
 
 # Header with 1 pound
 ## Header with 2 pounds
-*Italics* in stars,
-  **bold** in 2 sets of stars
+*Italics* in asterisks, **bold** in 2 sets of asterisks
 
 ## Load Libraries
 ```{r, warning = FALSE, message = FALSE}
@@ -35,14 +34,14 @@ glimpse(penguins)
 
 # Make a plot
 ```{r}
-penguins %>%
+penguins %>% #open pipeline for graph
   ggplot(aes(x = bill_length_mm, #define axes
              y = bill_depth_mm, 
              color = species)
          )+
   geom_point()+ #place scatter
   geom_smooth(method = "lm")+ #trendline, linear model
-  labs(x = "Bill length (mm)",
+  labs(x = "Bill length (mm)", #add labels
        y = "Bill Depth (mm)"
        )+
   theme_bw()
