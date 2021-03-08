@@ -2,24 +2,71 @@
 title: "W7_Mon_Lab"
 author: "Kirill Musaev"
 date: "3/8/2021"
-output: html_document
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, error = FALSE, message = FALSE)
 ```
 
-#Load Libraries
-```{r libs}
+## Load Libraries
+
+```{r libs, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(here)
 library(maps)
+library(mapdata)
 library(mapproj)
 ```
 
-#Retrieve and load data - Plastic pollution
-```{r load_data}
-plastics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-26/plastics.csv') %>%  #retrieves the data from the web and puts it into a frame
-write_csv(here("Week_7","data","plastic_pollution.csv")) #writes data to file for reference
+## Retrieve and load data 
+
+Plastic pollution data will be used. Save a file locally in the "data" folder
+
+```{r load_data, echo=TRUE, message=FALSE, warning=FALSE}
+plastics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-26/plastics.csv') %>%  #retrieve the data from the web and put it into a frame
+write_csv(here("Week_7","data","plastic_pollution.csv")) #write data to file
+
+world <- map_data("world") #data to build a map
 ```
 
+## Process data 
+
+Select the right data and combine the map points with the pollution data for graphing
+
+```{r data_proc, echo=TRUE, message=FALSE, warning=FALSE}
+world_plastics <- plastics %>% #only take the total for each country
+  filter(parent_company == "Grand Total") %>% #only use totals for each country
+  filter(year == "2019") %>% #only use 2019 data
+  mutate(region = country) %>% #change name of the column to match the other frame
+  right_join(world) %>% #join into the "world" frame
+  group_by(country) %>% #prep for graphing
+  select(country, grand_total, long, lat, group) #select items to graph
+
+#view(world_plastics) #check data
+```
+
+## Construct a map
+
+```{r map, echo=TRUE, message=FALSE, warning=FALSE, fig.path = "../output/"}
+ggplot()+ 
+  geom_polygon(data = world_plastics, #use world map data
+               aes(x = long, #set axes
+                   y = lat, 
+                   group = group, #necessary for correct rendering
+                   fill = grand_total #color gradient will depend on the value of grand_total
+               ), color = "black" #color for borders
+  ) + 
+  guides(fill=FALSE)+
+  theme_void()+ #thin lines
+  theme(panel.background = element_rect(fill = "lightblue"))+ #change water color
+  coord_map(projection = "mercator", #allows to change projection
+            xlim = c(-180,180)) + #set coordinates for the center of the projection
+  scale_fill_gradient(trans = "log2")#set log scale for the color gradient
+
+
+
+```
