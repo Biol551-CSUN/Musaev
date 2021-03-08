@@ -1,0 +1,37 @@
+---
+title: "W7_Mon_CW"
+author: "Kirill Musaev"
+date: "3/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r libs, echo = FALSE}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+```{r load_data, echo = FALSE}
+# Read in data on population in California by county
+popdata<-read_csv(here("Week_7","data","CApopdata.csv"))
+#read in data on number of seastars at different field sites
+stars<-read_csv(here("Week_7","data","stars.csv"))
+```
+
+```{r data_analysis}
+# get data for the entire world
+world<-map_data("world")
+head(world) #check loaded data
+
+#load USA data
+#usa<-map_data("usa")
+#head(usa)
+#can do the same with states and counties
+```
+

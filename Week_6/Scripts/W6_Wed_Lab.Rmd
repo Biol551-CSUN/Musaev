@@ -13,14 +13,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Introduction
+
 This is a **table** and **graphic** representation of mass of penguins of different species, grouped by island and sex
 
 # Load libraries
+
 We will need **libraries** for:
 
-1. Dataset ( _penguins_ )
-2. Formatting ( _tidyverse_ , _kableExtra_ ) and 
-3. File management ( _here_ )
+1.  Dataset ( *penguins* )
+2.  Formatting ( *tidyverse* , *kableExtra* ) and
+3.  File management ( *here* )
+
 ```{r libs, message = FALSE, warning = FALSE}
 library(palmerpenguins)
 library(tidyverse)
@@ -29,7 +32,9 @@ library(kableExtra)
 ```
 
 # Process data
+
 Arranging the necessary data and calculating mean and variance of mass for the assigned groups. Commentary for each line is included
+
 ```{r data, echo = FALSE}
 glimpse(penguins) #look at data structure
 
@@ -41,8 +46,11 @@ mean_and_var <- penguins %>% #create pipeline for calculating mean and variance
   )
 #view(mean_and_var)#check mean and variance calculations
 ```
+
 # Create a table
+
 Display calculated mean and variance values in a convenient way
+
 ```{r table, fig.path = "../Output/"}
 knitr::kable(mean_and_var,
              col.names = c('Species', 'Island', 'Sex', 'Mean Mass (g)', 'Variance of Mass (g)')
@@ -52,7 +60,9 @@ knitr::kable(mean_and_var,
 ```
 
 # Build a graph
+
 Create a graph showing average mass difference between the 3 species. Adelie penguins are indicated separately for 3 islands.
+
 ```{r graph, fig.path = "../Output/"}
 PenguinFigure <- penguins %>%
   ggplot(aes(x = species, y = flipper_length_mm, color = island)) + #set axes for the plot
@@ -66,4 +76,3 @@ PenguinFigure <- penguins %>%
 
 PenguinFigure
 ```
-
