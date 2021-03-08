@@ -1,0 +1,25 @@
+---
+title: "W7_Mon_Lab"
+author: "Kirill Musaev"
+date: "3/8/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+#Load Libraries
+```{r libs}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapproj)
+```
+
+#Retrieve and load data - Plastic pollution
+```{r load_data}
+plastics <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-01-26/plastics.csv') %>%  #retrieves the data from the web and puts it into a frame
+write_csv(here("Week_7","data","plastic_pollution.csv")) #writes data to file for reference
+```
+
