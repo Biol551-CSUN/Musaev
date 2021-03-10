@@ -1,0 +1,37 @@
+---
+title: "W7_Wed_CW"
+author: "Kirill Musaev"
+date: "3/10/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Install mapping tools
+```{r}
+#install.packages("ggmap") # for ggmaps
+#install.packages("ggsn") # to add scale bars and compass arrows
+```
+
+# Load Libraries
+```{r}
+library(ggmap)
+library(tidyverse)
+library(here)
+library(ggsn)
+```
+
+# Load Data
+```{r}
+ChemData<-read_csv(here("Week_7","data","chemicaldata_maunalua.csv")) #contains coordinates
+#glimpse(ChemData) #check data
+```
+
+# Mapping tools practice
+```{r}
+Oahu<-get_map("Oahu")
+```
+
+
