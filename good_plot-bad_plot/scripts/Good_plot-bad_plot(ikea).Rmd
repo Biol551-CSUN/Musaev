@@ -9,13 +9,117 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, results = FALSE, message = FALSE)
 ```
 
 # Load Libraries
 
-```{r}
+-   "Tidyverse" for formatting
+-   "Here" for file management
+
+```{r libs}
 library(tidyverse)
 library(here)
 
+```
+
+# Load Data
+
+-   From file
+
+-   Includes a command to glimpse at the data in the end
+
+```{r load_from_file}
+FullData<-read_csv(here("good_plot-bad_plot","data","ikea.csv")) #load data from file path
+#glimpse(FullData) #check data loading
+```
+
+# Select and filter data
+
+-   Create a data frame with only the data to be processed
+
+-   Filter out incomplete rows
+
+-   Includes a command to view the data in the end
+
+```{r cleanup}
+CleanData<-FullData %>%
+  select(price, depth, height, width)%>% #delete unnecessary columns
+  filter(complete.cases(.)) #remove incomplete rows
+#view(CleanData) #check data 
+  
+```
+
+# Process data
+
+-   Calculate the volume of the item in each row
+-   Convert the original prices in Saudi Riyals to USD using the conversion rate on 4/20/2020, the day the data was generated. Reference: <https://www.exchange-rates.org/Rate/USD/SAR/4-20-2020>
+-   Includes a command to view the data in the end
+
+```{r calculations}
+DataWVolume <- CleanData %>% #create pipeline for calculations
+  mutate(volume = depth * height * width) %>% #calculate volume
+  mutate(price = price / 3.7545) #convert currency
+
+#view(DataWVolume) #check data
+```
+
+# Generate bad plot
+
+-   Low resolution
+-   Undescriptive title
+-   Title does not fit in the image
+-   Axes labels useless, no units
+-   Y axis coordinates in an inconvenient notation
+-   "Independent" variable on vertical axis
+-   Box plot not appropriate for data that is continuous on both axes, effectively eliminating the x axis
+-   Regression line is linear while one of the axes is logarithmic
+-   Regression line color blends in with the background
+
+```{r bad_plot, fig.width=2,fig.height=2}
+DataWVolume %>% #pipeline for ggplot
+  ggplot(aes(x = log10(price), #x axis irrelevant
+             y = volume) #"independent" variable on y axis
+  ) +
+  geom_boxplot() + #graph type discontinuous on x axis
+  geom_smooth(method = "lm", #regression line linear on a log graph
+              colour = "azure") + #color blends in with the background
+  labs(x = "Left-right",#useless labels
+       y = "Up-down",
+       title = "IKEA furniture size and price"
+       )
+
+ggsave(here("good_plot-bad_plot","Output","Bad_plot.jpg"),#save plot to file
+       width = 1.5, height = 1.5) #set aspect ratio
+```
+
+# Generate good plot
+
+-   Bulkier items tend to cost more
+-   Use scatterplot to indicate all data points
+-   Logarithmic scale due to large spread of weight
+-   Trendline using LOWESS
+-   Save output to file
+
+```{r good_plot, fig.width=10,fig.height=9}
+DataWVolume %>% #pipeline for ggplot
+  ggplot(aes(x = log2(volume), #set x axis to volume and apply logarithmic scale
+             y = price #set y axis to price
+             )
+         ) +
+  geom_point(size = 1) + # set size for individual data points
+  geom_smooth(method = "loess", #create regression line using local fitting
+              se = FALSE, #remove confidence intervals since they are not rendered correctly on log scale
+              colour = "coral") + #set color for regression line
+  labs(x = "Volume, log₂ cm³",#set x axis label.Note that "₂" did not render as a subscript on the plot
+       y = "Price, USD", #y axis label
+       title = "Price of IKEA Items Correlates with Volume", #add title 
+       subtitle = "Currency converted from Saudi Riyal (SAR) to United States Dollar (USD) using conversion \nrate as of 4/20/2020, the date that the dataset was generated", #add subtitle
+       caption = "Source: Ahmed_k_Allam at Kaggle" #indicate source under the graph
+       )+
+  theme_light(base_size = 22) + #set a theme
+  theme(plot.subtitle = element_text(size = 15)) #set size for subtitle
+
+ggsave(here("good_plot-bad_plot","Output","Good_plot.jpg"),#save plot to file
+       width = 10, height = 9) #set aspect ratio
 ```
