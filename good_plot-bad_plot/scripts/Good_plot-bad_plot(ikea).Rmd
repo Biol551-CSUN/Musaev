@@ -95,10 +95,12 @@ ggsave(here("good_plot-bad_plot","Output","Bad_plot.jpg"),#save plot to file
 
 # Generate good plot
 
--   Bulkier items tend to cost more
+-   Demonstrates relationship between price and size
+-   Subtitle explains an important point about the data
 -   Use scatterplot to indicate all data points
--   Logarithmic scale due to large spread of weight
+-   Logarithmic scale due to large spread of the size data
 -   Trendline using LOWESS
+-   Source of the data is cited
 -   Save output to file
 
 ```{r good_plot, fig.width=10,fig.height=9}
