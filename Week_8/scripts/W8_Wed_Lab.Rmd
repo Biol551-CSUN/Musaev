@@ -1,0 +1,111 @@
+---
+title: "W8_Wed_Lab"
+author: "Kirill Musaev"
+date: "3/29/2021"
+output:
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+#(echo = FALSE, warning = FALSE, error = FALSE, message = FALSE)
+```
+
+## Load libraries
+
+```{r libs}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+```
+
+## Define functions
+
+### Filter function
+
+This function will select either male or female penguins. This example selects females. Runs the function in the end and displays the filtered data
+
+```{r filter_function}
+#glimpse(penguins) #check data structure
+
+temp_df <- penguins #create a new dataframe to work with to keep the original data intact
+
+m_or_f <- function(temp_df, select_females) { #name a new function and set inputs
+  if(select_females == TRUE) { #define what happens when selection for females is true
+    filter(temp_df, sex == "female", na.rm = TRUE) #select females only and filter out NA values
+  }
+  else { #define what happens when selection for females is not true
+    filter(temp_df, sex == "male", na.rm = TRUE) #select males only and filter out NA values
+  }
+}
+
+filtered_data <- m_or_f(temp_df, select_females = TRUE) #execute the function and write processed data to a new dataframe
+glimpse(filtered_data) #check that data was processed correctly
+```
+
+### Plot function
+
+Allows to choose between boxplot and violin plot
+
+```{r plot_function}
+plot <- function(data = filtered_data, x, y, boxplot) { #name a function for plotting and specify inputs
+  if(boxplot == TRUE) { #actions for when boxplot is set to true
+  ggplot(data, aes(x = {{x}}, y = {{y}})) + #load data and specify axes
+      geom_boxplot() + #add boxplot
+      labs(x = "Island", #add labels and title
+           y = "Body mass (g)",
+           title = "Mass of penguins on three islands, box plot") +
+      theme_bw() #change theme
+  }
+  else { #actions for when boxplot is not set to true
+    ggplot(data, aes(x = {{x}}, y = {{y}})) +
+      geom_violin() + #add violin plot
+      labs(x = "Island", #add labels and title
+           y = "Body mass (g)",
+           title = "Mass of penguins on three islands, violin plot") +
+      theme_bw() #change theme
+  }
+}
+
+```
+
+#### Build plots using the plot function. The plots represent body mass distribution of penguins on different islands
+
+```{r f_boxplot}
+plot(y = body_mass_g, x = island, boxplot = TRUE) + #use plot function
+  labs(subtitle = "Females") #indicate that the data is on females
+  ggsave(here("Week_8","Output","Female penguins boxplot.jpg"),#save plot to file
+       width = 5, height = 7) #adjust size
+```
+
+```{r f_violin_plot}
+plot(y = body_mass_g, x = island, boxplot = FALSE) + #use plot function
+  labs(subtitle = "Females") #indicate that the data is on females
+  ggsave(here("Week_8","Output","Female penguins violin plot.jpg"),#save plot to file
+       width = 5, height = 7) #adjust size
+```
+
+#### This chunk filters the data for males using the function above
+
+```{r filter_for_males}
+filtered_data <- m_or_f(temp_df, select_females = FALSE) #execute the function and rewrite the dataframe used for plotting, this time for male penguins
+glimpse(filtered_data) #check that data was rewritten
+```
+
+#### Plot the data for male penguins using the functions above
+
+```{r m_boxplot}
+plot(y = body_mass_g, x = island, boxplot = TRUE) + #use plot function
+  labs(subtitle = "Males") #indicate that the data is on male penguins
+  ggsave(here("Week_8","Output","Male penguins boxplot.jpg"),#save plot to file
+       width = 5, height = 7) #adjust size
+```
+
+```{r m_violin_plot}
+plot(y = body_mass_g, x = island, boxplot = FALSE) + #use plot function
+  labs(subtitle = "Males") #indicate that the data is on males
+  ggsave(here("Week_8","Output","Male penguins violin plot.jpg"),#save plot to file
+       width = 5, height = 7) #adjust size
+```
