@@ -9,8 +9,8 @@ data_raw <- read_csv(here("Week_10","data", "HatchBabyExport.csv")) # load from 
 view(data_raw) # check data structure
 
 # Format data
-colnames(data_raw) = gsub(" ", "_",colnames(data_raw)) # remove spaces from column names to be able to call on them
-#data <- mutate(data_raw, Start_Time = ymd_hm(Start_Time), End_Time = ymd_hm(End_Time))
+
+data <- mutate(data_raw, Start_Time = ymd_hm(Start_Time), End_Time = ymd_hm(End_Time))
 data <- data_raw %>%
     select(Baby_Name, Start_Time, Activity, Amount) %>%
     pivot_wider(names_from = Activity,
@@ -22,6 +22,7 @@ data <- data_raw %>%
     mutate(Date = parse_date(Date, c("%m/%d/%Y"))) %>%
     
     view(data)
+
 
 
 
